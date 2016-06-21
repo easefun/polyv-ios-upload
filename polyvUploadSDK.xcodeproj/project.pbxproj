@@ -14,6 +14,8 @@
 		672AD9771D18EB33009FAF5E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 672AD9761D18EB33009FAF5E /* Assets.xcassets */; };
 		672AD97A1D18EB33009FAF5E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 672AD9781D18EB33009FAF5E /* LaunchScreen.storyboard */; };
 		672AD9851D18EB33009FAF5E /* polyvUploadSDKTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 672AD9841D18EB33009FAF5E /* polyvUploadSDKTests.m */; };
+		672AD9941D18F363009FAF5E /* PLVUploadSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 672AD9931D18F363009FAF5E /* PLVUploadSDK.framework */; };
+		672AD9961D19030F009FAF5E /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 672AD9951D19030F009FAF5E /* libz.tbd */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +42,8 @@
 		672AD9801D18EB33009FAF5E /* polyvUploadSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = polyvUploadSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		672AD9841D18EB33009FAF5E /* polyvUploadSDKTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = polyvUploadSDKTests.m; sourceTree = "<group>"; };
 		672AD9861D18EB33009FAF5E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		672AD9931D18F363009FAF5E /* PLVUploadSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = PLVUploadSDK.framework; sourceTree = "<group>"; };
+		672AD9951D19030F009FAF5E /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,6 +51,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				672AD9961D19030F009FAF5E /* libz.tbd in Frameworks */,
+				672AD9941D18F363009FAF5E /* PLVUploadSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -63,6 +69,8 @@
 		672AD95E1D18EB33009FAF5E = {
 			isa = PBXGroup;
 			children = (
+				672AD9951D19030F009FAF5E /* libz.tbd */,
+				672AD9931D18F363009FAF5E /* PLVUploadSDK.framework */,
 				672AD9691D18EB33009FAF5E /* polyvUploadSDK */,
 				672AD9831D18EB33009FAF5E /* polyvUploadSDKTests */,
 				672AD9681D18EB33009FAF5E /* Products */,
@@ -341,10 +349,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)";
 				INFOPLIST_FILE = polyvUploadSDK/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = net.polyv.polyvUploadSDK;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "";
 			};
 			name = Debug;
 		};
@@ -353,10 +364,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)";
 				INFOPLIST_FILE = polyvUploadSDK/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = net.polyv.polyvUploadSDK;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "";
 			};
 			name = Release;
 		};
