@@ -32,14 +32,14 @@
 
 5. 导入PLVApi.h头文件
 
-```objective
+```objective-c
 #import<PLVUploadSDK/PLVApi.h>
 ```
 
 ## PLVApi.h接口文件
 * 初始化上传
 
-```objective
+```objective-c
 - (void)initUploadWithWritetoken:(NSString *)writetoken userid:(NSString *)userid
                         cataid:(NSString *)cataid
                            titlt:(NSString *)title
@@ -52,7 +52,7 @@
 ```   
 * 上传文件
 
-```objective
+```objective-c
 + (void)startUploadWithToken:(NSString *)uploadToken
                      taskTag:(NSUInteger)taskTag
               progressBlocak:(void(^)(long long totalBytesWritten, long long totalBytesExpectedToWrite))progressBlock
@@ -61,7 +61,7 @@
 ```     
 * 取消上传文件
 
-```objective
+```objective-c
   + (void)cancelUploadInTaskTag:(NSUInteger)taskTag;
 ```
 
