@@ -41,7 +41,7 @@
 
 ```objective-c
 - (void)initUploadWithWritetoken:(NSString *)writetoken userid:(NSString *)userid
-                        cataid:(NSString *)cataid
+                          cataid:(NSString *)cataid
                            titlt:(NSString *)title
                              tag:(NSString *)tag
                           luping:(NSString *)luping
