@@ -25,8 +25,7 @@
     
 4. 配置info.plist文件，允许http连接访问
 
-  iOS9.0中开发要求App内访问的网络必须使用HTTPS协议，为了解决这个问题。我们可以在Info.plist文件中添加NSAppTransportSecurity类型Dictionary。
-在NSAppTransportSecurity下添加NSAllowsArbitraryLoads类型Boolean,值设为YES即可
+  iOS9.0中开发要求App内访问的网络必须使用HTTPS协议，为了解决这个问题。我们可以在Info.plist文件中添加NSAppTransportSecurity条目，此条目下再添加NSAllowsArbitraryLoads，并设值为YES
 ![](https://raw.githubusercontent.com/easefun/polyv-ios-upload/master/images/2.png)
  非测试文件中的Info.plist
 
