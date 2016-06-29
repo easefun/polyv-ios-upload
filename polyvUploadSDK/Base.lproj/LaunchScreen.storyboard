@@ -50,8 +50,8 @@
                                 <exclude reference="alN-8V-2nu"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="1Yo-KF-tBX"/>
                                 <exclude reference="caB-Tb-ke5"/>
+                                <exclude reference="1Yo-KF-tBX"/>
                             </mask>
                         </variation>
                         <variation key="widthClass=compact">
@@ -59,8 +59,8 @@
                                 <include reference="alN-8V-2nu"/>
                             </mask>
                             <mask key="constraints">
-                                <include reference="1Yo-KF-tBX"/>
                                 <include reference="caB-Tb-ke5"/>
+                                <include reference="1Yo-KF-tBX"/>
                             </mask>
                         </variation>
                     </view>

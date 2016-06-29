@@ -29,16 +29,16 @@
 @property (nonatomic, copy) NSString *luping;           // 视频课件优化处理：0/1
 
 
-@property (weak, nonatomic) IBOutlet UILabel *statusLabel;
-@property (weak, nonatomic) IBOutlet UIImageView *imageView;
-@property (weak, nonatomic) IBOutlet UIProgressView *progressView;
-@property (weak, nonatomic) IBOutlet UILabel *progressLabel;
-@property (weak, nonatomic) IBOutlet UIButton *uploadButton;
-@property (weak, nonatomic) IBOutlet UIButton *cancelbutton;
+@property (weak, nonatomic) IBOutlet UILabel            *statusLabel;
+@property (weak, nonatomic) IBOutlet UIImageView        *imageView;
+@property (weak, nonatomic) IBOutlet UIProgressView     *progressView;
+@property (weak, nonatomic) IBOutlet UILabel            *progressLabel;
+@property (weak, nonatomic) IBOutlet UIButton           *uploadButton;
+@property (weak, nonatomic) IBOutlet UIButton           *cancelbutton;
 
 
-@property (strong, nonatomic) UIImagePickerController *videoPicker;
-@property (assign, nonatomic) BOOL isVideoPicker;                       // 是否拍摄
+@property (strong, nonatomic) UIImagePickerController   *videoPicker;
+@property (assign, nonatomic) BOOL                      isVideoPicker;      // 是否拍摄
 
 
 @end
@@ -68,14 +68,14 @@
 - (void)initializeData {
 
     // 示例数据
-    self.writetoken = @"Y07Q4yopIVXN83n-MPoIlirBKmrMPJu0";
-    self.userid = @"sl8da4jjbx";
+    self.writetoken = @"Y07Q4yopIVXN83n-MPoIlirBKmrMPJu0";      // 你的writetoken
+    self.userid = @"sl8da4jjbx";                                // 你的userid
     self.cataid = @"1";
     self.fileTitle = @"中文--标题+*1";
     self.tag = @"keyword1, 标签2";
     self.luping = @"0";
     
-    // 如果文件在程序退出之前有本地化保存，可以在此处读取
+    // 文件在退出程序时可以保存文件路径，再次进入时读取文件的地址。示例(仅参考)
     //     _filePath =[NSTemporaryDirectory() stringByAppendingPathComponent:@"temp.mov"];
     //    if ([[NSFileManager defaultManager] fileExistsAtPath:_filePath]) {
     //        _newFileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:_filePath error:nil] objectForKey:NSFileSize];
@@ -146,8 +146,8 @@
     }
     
     NSLog(@"original file size:%@",_originalFileSize);      // 原始文件大小
-    self.statusLabel.text = @"压缩中...";
-    self.progressLabel.text = @"progress:0%";
+    self.statusLabel.text =     @"压缩中...";
+    self.progressLabel.text =   @"progress:0%";
     self.uploadButton.enabled = NO;
     
     // 获取视频缩略图
@@ -158,8 +158,9 @@
     
     // 视频压缩
     [self convertVideoToLowQuailtyWithInputURL:videoURL outputURL:[NSURL fileURLWithPath:_filePath] handler:^(AVAssetExportSession *exportSession) {
+       
+        // 非主线程，如有UI更新等操作需在主线程代码中执行
         if (exportSession.status == AVAssetExportSessionStatusCompleted) {
-            
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.statusLabel.text = @"压缩完成";
             });
@@ -207,10 +208,10 @@
 
 #pragma mark - 用户交互事件
 
-// upload按钮点击事件
+// upload点击事件
 - (IBAction)uploadFileButton:(id)sender {
     
-    if (![[NSFileManager defaultManager] fileExistsAtPath:_filePath]) {                // 判断操作
+    if (![[NSFileManager defaultManager] fileExistsAtPath:_filePath]) {                // 判断
         NSLog(@"no file can be found");
         return;
     }
@@ -222,28 +223,25 @@
         //NSString *bucketName = responseDict[@"bucketName"];
         //NSString *fileKey = responseDict[@"fileKey"];
         NSLog(@"file vid:%@",vid);
-        
+
         ++ _taskTag;
         
         // 初始化成功 调用PLVApi接口开始上传
         [PLVApi startUploadWithToken:uploadToken taskTag:_taskTag progressBlocak:^(long long totalBytesWritten, long long totalBytesExpectedToWrite) {
             
-            dispatch_async(dispatch_get_main_queue(), ^{                                    // 上传中操作，多次调用
-                self.statusLabel.text = @"uploading...";
-                float percent = (float)totalBytesWritten/(float)totalBytesExpectedToWrite;
-                self.progressView.progress = percent;
-                self.progressLabel.text = [NSString stringWithFormat:@"progress:%.1f%%",percent > 1 ? 100.0 : percent*100];
-            });
+            self.statusLabel.text = @"uploading...";                                              // 上传中操作，多次调用
+            float percent = (float)totalBytesWritten/(float)totalBytesExpectedToWrite;
+            self.progressView.progress = percent;
+            self.progressLabel.text = [NSString stringWithFormat:@"progress:%.1f%%",percent > 1 ? 100.0 : percent*100]; // 解决可能出现超过百分百的问题
             
         } successBlock:^(NSDictionary *responseDict) {
-            NSLog(@"slice upload success : %@", responseDict);                              // 上传文件成功回调
+            NSLog(@"slice upload success : %@", responseDict);                                  // 上传文件成功回调
+            // 目前sdk中处理缓存部分是在文件上传成功后清空沙盒中Temp缓存的所有文件，包括视频源文件，压缩后的文件，上传成功和之前上传失败的文件。如有问题可联系我们做进一步的完善
             
-            dispatch_async(dispatch_get_main_queue(), ^{
-                self.statusLabel.text = @"slice upload success";
-            });
+            self.statusLabel.text = @"slice upload success";
             
         } failureBlock:^(NSDictionary *errorMsg) {
-            NSLog(@"failured : %@", errorMsg);                                               // 上传文件失败或终止回调
+            NSLog(@"failured : %@", errorMsg);                                                  // 上传文件失败或终止回调
             
             NSObject *messages = [errorMsg[@"messages"] firstObject];
             NSString *status = [NSString new];
@@ -254,9 +252,7 @@
             }else {
                 status = (NSString *)messages;
             }
-            dispatch_async(dispatch_get_main_queue(), ^{
-                self.statusLabel.text = status;
-            });
+            self.statusLabel.text = status;
         }];
         
     } failureBlock:^(NSDictionary *errorMsg) {
