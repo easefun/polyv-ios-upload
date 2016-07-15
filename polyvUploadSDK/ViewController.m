@@ -12,6 +12,9 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import <PLVUploadSDK/PLVApi.h>
 
+#define WRITETOKEN  @""             // 填写你的writetoken
+#define USERID      @""             // 你的userid
+
 
 @interface ViewController ()<UINavigationControllerDelegate,UIImagePickerControllerDelegate>
 {
@@ -68,12 +71,22 @@
 - (void)initializeData {
 
     // 示例数据
-    self.writetoken = @"Y07Q4yopIVXN83n-MPoIlirBKmrMPJu0";      // 你的writetoken
-    self.userid = @"sl8da4jjbx";                                // 你的userid
+    self.writetoken = WRITETOKEN;
+    self.userid = USERID;
     self.cataid = @"1";
     self.fileTitle = @"中文--标题+*1";
     self.tag = @"keyword1, 标签2";
     self.luping = @"0";
+    
+    
+    @try {
+        if (!self.writetoken.length||!self.userid.length)
+            @throw [NSException exceptionWithName:@"configuration error" reason:@"writetoken和userid不能为空" userInfo:nil];
+    }
+    @catch (NSException *exception) {
+        NSLog(@"%@",exception);
+    }
+   
     
     // 文件在退出程序时可以保存文件路径，再次进入时读取文件的地址。示例(仅参考)
     //     _filePath =[NSTemporaryDirectory() stringByAppendingPathComponent:@"temp.mov"];
