@@ -235,7 +235,7 @@
         NSString *uploadToken = responseDict[@"uploadToken"];       // 获取uploadToken等信息，可打印responseDict查看
         //NSString *bucketName = responseDict[@"bucketName"];
         //NSString *fileKey = responseDict[@"fileKey"];
-        NSLog(@"file vid:%@",vid);
+        NSLog(@"file vid:%@，length:%ld",vid,vid.length);
 
         ++ _taskTag;
         

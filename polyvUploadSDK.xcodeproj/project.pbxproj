@@ -14,8 +14,8 @@
 		672AD9771D18EB33009FAF5E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 672AD9761D18EB33009FAF5E /* Assets.xcassets */; };
 		672AD97A1D18EB33009FAF5E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 672AD9781D18EB33009FAF5E /* LaunchScreen.storyboard */; };
 		672AD9851D18EB33009FAF5E /* polyvUploadSDKTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 672AD9841D18EB33009FAF5E /* polyvUploadSDKTests.m */; };
-		672AD9941D18F363009FAF5E /* PLVUploadSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 672AD9931D18F363009FAF5E /* PLVUploadSDK.framework */; };
 		672AD9961D19030F009FAF5E /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 672AD9951D19030F009FAF5E /* libz.tbd */; };
+		672B87A91D39011800185AA7 /* PLVUploadSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 672B87A81D39011800185AA7 /* PLVUploadSDK.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,8 +42,8 @@
 		672AD9801D18EB33009FAF5E /* polyvUploadSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = polyvUploadSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		672AD9841D18EB33009FAF5E /* polyvUploadSDKTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = polyvUploadSDKTests.m; sourceTree = "<group>"; };
 		672AD9861D18EB33009FAF5E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		672AD9931D18F363009FAF5E /* PLVUploadSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = PLVUploadSDK.framework; sourceTree = "<group>"; };
 		672AD9951D19030F009FAF5E /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		672B87A81D39011800185AA7 /* PLVUploadSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = PLVUploadSDK.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,7 +52,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				672AD9961D19030F009FAF5E /* libz.tbd in Frameworks */,
-				672AD9941D18F363009FAF5E /* PLVUploadSDK.framework in Frameworks */,
+				672B87A91D39011800185AA7 /* PLVUploadSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -70,7 +70,7 @@
 			isa = PBXGroup;
 			children = (
 				672AD9951D19030F009FAF5E /* libz.tbd */,
-				672AD9931D18F363009FAF5E /* PLVUploadSDK.framework */,
+				672B87A81D39011800185AA7 /* PLVUploadSDK.framework */,
 				672AD9691D18EB33009FAF5E /* polyvUploadSDK */,
 				672AD9831D18EB33009FAF5E /* polyvUploadSDKTests */,
 				672AD9681D18EB33009FAF5E /* Products */,
@@ -168,7 +168,6 @@
 				TargetAttributes = {
 					672AD9661D18EB33009FAF5E = {
 						CreatedOnToolsVersion = 7.2;
-						DevelopmentTeam = 8BMZBNN3Q5;
 					};
 					672AD97F1D18EB33009FAF5E = {
 						CreatedOnToolsVersion = 7.2;

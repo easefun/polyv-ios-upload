@@ -10,15 +10,22 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		y4Du20qv1j5/IvWKWm8O7rpDkx4=
+		sm5/CsXSA9D0e7SZ/T2xInh17q0=
 		</data>
 	</dict>
 	<key>files2</key>
 	<dict>
 		<key>Headers/PLVApi.h</key>
-		<data>
-		P16mOg4ihzyXyK73z7LyXDxR4fs=
-		</data>
+		<dict>
+			<key>hash</key>
+			<data>
+			P16mOg4ihzyXyK73z7LyXDxR4fs=
+			</data>
+			<key>hash2</key>
+			<data>
+			rnRc44eR25wM5zTZ6/9PL0Rr3KvTaeQxig0Zkaopu88=
+			</data>
+		</dict>
 	</dict>
 	<key>rules</key>
 	<dict>
