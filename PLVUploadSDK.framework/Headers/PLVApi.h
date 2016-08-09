@@ -14,7 +14,7 @@
 
 /**
  *  初始化上传
- *
+ *  代码块回调在异步线程中
  *  @param writetoken      用户的writetoken值
  *  @param userid          用户的id
  *  @param cataid          分类id
@@ -38,11 +38,11 @@
 
 /**
  *  上传文件
- *
+ *  代码块回调部分在主线程中
  *  @param taskTag       上传任务的tag，配合cancelUploadInTaskTag:使用
  *  @param progressBlock 上传进度
  *  @param successBlock  上传成功回调的block
- *  @param failureblock  上传失败回调的blockS
+ *  @param failureblock  上传失败回调的block
  */
 + (void)startUploadWithToken:(NSString *)uploadToken
                      taskTag:(NSUInteger)taskTag

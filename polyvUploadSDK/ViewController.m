@@ -131,7 +131,13 @@
 - (void)takeVideo {
     
     _isVideoPicker = YES;
-    [self presentViewController:self.videoPicker animated:YES completion:nil];
+    
+    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+        [self presentViewController:self.videoPicker animated:YES completion:nil];
+    }else {
+        NSLog(@"无可用摄像头设备");
+    }
+    
 }
 
 
@@ -235,7 +241,6 @@
         NSString *uploadToken = responseDict[@"uploadToken"];       // 获取uploadToken等信息，可打印responseDict查看
         //NSString *bucketName = responseDict[@"bucketName"];
         //NSString *fileKey = responseDict[@"fileKey"];
-        NSLog(@"file vid:%@，length:%ld",vid,vid.length);
 
         ++ _taskTag;
         
