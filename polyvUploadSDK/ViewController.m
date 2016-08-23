@@ -237,6 +237,7 @@
     
     // 初始化上传
     [[PLVApi alloc] initUploadWithWritetoken:self.writetoken userid:self.userid cataid:self.cataid titlt:self.fileTitle tag:self.tag luping:self.luping filepath:_filePath fileSize:_newFileSize completionBlock:^(NSDictionary *responseDict, NSString *vid) {
+        NSLog(@"vid:%@",vid);
         
         NSString *uploadToken = responseDict[@"uploadToken"];       // 获取uploadToken等信息，可打印responseDict查看
         //NSString *bucketName = responseDict[@"bucketName"];
