@@ -5,6 +5,12 @@
 
 本工程上传文件时会对选取的视频文件或拍摄的视频进行压缩处理，如果不需要压缩，简单修改一下代码即可(压缩视频的代码在demo中)
 
+## 更新说明
+
+2016-8-23
+
+- 原上传接口不可用，先更新新的接口
+
 ## PLVUploadSDK.framework
   接口文件为PLVApi.h，支持IOS7.0以上系统版本的编译以及armv7 armv7s arm64(真机)、 i386 x86_64(模拟器) 架构的cpu
   
@@ -64,4 +70,4 @@
   + (void)cancelUploadInTaskTag:(NSUInteger)taskTag;
 ```
 
-#### 注意: 需在真机上测试拍摄上传的功能
+#### 注意: 需在真机上测试拍摄上传的功能  获取的writeToken值有效期为两个小时
