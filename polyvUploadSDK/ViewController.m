@@ -53,20 +53,16 @@
     [self initializeData];     // 初始化数据
 }
 
-
 - (void)setupUI {
     UIBarButtonItem *rightBarButtonitem = [[UIBarButtonItem alloc] initWithTitle:@"选取" style:UIBarButtonItemStyleDone target:self action:@selector(showSheetAlert)];
     UINavigationItem *navigationItem = [[UINavigationItem alloc] initWithTitle:@"断点续传"];
     [navigationItem setRightBarButtonItem:rightBarButtonitem];
-    
     UINavigationBar *navigationBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 64)];
     [self.view addSubview:navigationBar];
     navigationBar.items = @[navigationItem];
 }
 
-
 - (void)initializeData {
-
     // 示例数据
     self.writetoken = WRITETOKEN;
     self.userid = USERID;
@@ -82,20 +78,10 @@
     @catch (NSException *exception) {
         NSLog(@"%@",exception);
     }
-    
-    // 程序在退出时可以保存文件路径，再次进入时读取文件的地址。示例(仅参考)
-    //     _filePath =[NSTemporaryDirectory() stringByAppendingPathComponent:@"temp.mov"];
-    //    if ([[NSFileManager defaultManager] fileExistsAtPath:_filePath]) {
-    //        _newFileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:_filePath error:nil] objectForKey:NSFileSize];
-    //        // 获取视频缩略图
-    //        MPMoviePlayerController *player = [[MPMoviePlayerController alloc] initWithContentURL:[NSURL URLWithString:_filePath]];
-    //        self.imageView.image = [player thumbnailImageAtTime:1.0 timeOption:MPMovieTimeOptionNearestKeyFrame];
-    //    }
 }
 
 
 - (void)showSheetAlert {
-    
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     UIAlertAction *selectFileAction = [UIAlertAction actionWithTitle:@"文件上传" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [self selectVideoFile];     // 文件上传
@@ -113,7 +99,6 @@
 
 
 - (void)selectVideoFile {
-    
     UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
     [imagePicker setSourceType:UIImagePickerControllerSourceTypeSavedPhotosAlbum];
     [imagePicker setMediaTypes:@[(__bridge NSString *)kUTTypeMovie]];   // 设置媒体类型为movie
@@ -124,7 +109,6 @@
 
 
 - (void)takeVideo {
-    
     _isVideoPicker = YES;
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
         [self presentViewController:self.videoPicker animated:YES completion:nil];
@@ -171,9 +155,8 @@
     // 视频压缩
     [self convertVideoToLowQuailtyWithInputURL:videoURL outputURL:[NSURL fileURLWithPath:_filePath] handler:^(AVAssetExportSession *exportSession) {
        
-        // 非主线程，如有UI更新等操作需在主线程代码中执行
         if (exportSession.status == AVAssetExportSessionStatusCompleted) {
-            dispatch_async(dispatch_get_main_queue(), ^{
+            dispatch_async(dispatch_get_main_queue(), ^{         // 子线程，UI更新等操作需在主线程代码中执行
                 self.statusLabel.text = @"压缩完成";
             });
             _newFileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:_filePath error:nil] objectForKey:NSFileSize];
@@ -188,9 +171,9 @@
     }];
 }
 
-//- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
-//    //deselected file
-//}
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+    //deselected file
+}
 
 /** 压缩视频大小*/
 - (void)convertVideoToLowQuailtyWithInputURL:(NSURL*)inputURL
@@ -225,7 +208,6 @@
         NSLog(@"file not found");
         return;
     }
-
     // 初始化上传
     [[PLVApi alloc] initUploadWithWriteToken:self.writetoken userid:self.userid cataid:self.cataid titlt:self.fileTitle tag:self.tag luping:self.luping filepath:_filePath fileSize:_newFileSize completionBlock:^(NSDictionary *responseDict, NSString *vid) {
         NSLog(@"vid:%@",vid);
@@ -285,7 +267,6 @@
     }
     return _videoPicker;
 }
-
 
 
 - (void)didReceiveMemoryWarning {
