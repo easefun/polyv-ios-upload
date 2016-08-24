@@ -40,6 +40,7 @@
 ```objective-c
 #import<PLVUploadSDK/PLVApi.h>
 ```
+  **使用此头文件时如果Xcode提示"file not found"错误,可尝试直接拷贝此行代码,因为Xcode7.3编译器有时会无法感应出来**
 
 ## PLVApi.h接口文件
 * 初始化上传
