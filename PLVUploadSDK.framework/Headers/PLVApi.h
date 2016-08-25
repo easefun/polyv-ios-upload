@@ -57,36 +57,4 @@
 + (void)cancelUploadingOperationInTag:(NSUInteger)taskTag;
 
 
-
-/**
- *  初始化上传(代码块回调在异步线程中)
- *
- *  @param writeToken      用户的writeToken
- *  @param userid          用户的id
- *  @param cataid          分类id
- *  @param title           视频标题
- *  @param tag             标签(多个标签用逗号分隔)
- *  @param luping          视频课件优化处理：0/1
- *  @param filepath        文件路径
- *  @param fileSize        待上传文件大小
- *  @param completionBlock 请求成功后回调的block
- *  @param failureBlock    请求失败回调的block
- */
-- (void)initUploadWithWriteToken:(NSString *)writeToken
-                          userid:(NSString *)userid
-                          cataid:(NSString *)cataid
-                           titlt:(NSString *)title
-                             tag:(NSString *)tag
-                          luping:(NSString *)luping
-                        filepath:(NSString *)filepath
-                        fileSize:(NSString *)fileSize
-                 completionBlock:(void(^)(NSDictionary *responseDict, NSString *vid))completionBlock
-                    failureBlock:(void(^)(NSDictionary *errorMsg))failureBlock __deprecated;
-
-+ (void)startUploadWithUploadToken:(NSString *)uploadToken
-                           taskTag:(NSUInteger)taskTag
-                    progressBlocak:(void(^)(long long totalBytesWritten, long long totalBytesExpectedToWrite))progressBlock
-                      successBlock:(void(^)(NSDictionary *responseDict))successBlock
-                      failureBlock:(void(^)(NSDictionary *errorMeg))failureblock __deprecated;
-
 @end

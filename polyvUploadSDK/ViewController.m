@@ -41,7 +41,6 @@
 
 @end
 
-
 @implementation ViewController
 
 - (void)viewDidLoad {
@@ -143,7 +142,6 @@
     [self presentViewController:alertController animated:YES completion:nil];
 }
 
-
 - (void)selectVideoFile {
     UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
     [imagePicker setSourceType:UIImagePickerControllerSourceTypeSavedPhotosAlbum];
@@ -152,7 +150,6 @@
     
     [self presentViewController:imagePicker animated:YES completion:nil];
 }
-
 
 - (void)takeVideo {
     _isVideoPicker = YES;
@@ -259,7 +256,6 @@
     return _videoPicker;
 }
 
-
 // empty video cache
 - (void)clearlocalVideoUploadCaches {
     
@@ -269,7 +265,6 @@
         [fileManager removeItemAtPath:[NSTemporaryDirectory() stringByAppendingPathComponent:fileName] error:nil];
     }
 }
-
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
