@@ -18,9 +18,7 @@
 
 @interface ViewController ()<UINavigationControllerDelegate,UIImagePickerControllerDelegate>
 {
-    NSString    *_originalFileSize;     // 原始文件大小 :bytes
-    NSString    *_newFileSize;          // 压缩后的文件大小 :bytes
-    NSString    *_filePath;             // 文件路径
+    NSString    *_filePath;             // 待上传文件的路径
     NSUInteger  _taskTag;               // 上传任务的标记
 }
 
@@ -70,7 +68,6 @@
     self.fileTitle = @"中文--标题+*1";
     self.tag = @"keyword1, 标签2";
     self.luping = @"0";
-    
     @try {
         if (!self.writetoken.length||!self.userid.length)
             @throw [NSException exceptionWithName:@"configuration error" reason:@"writetoken和userid不能为空" userInfo:nil];
@@ -80,6 +77,55 @@
     }
 }
 
+#pragma mark - 点击事件
+
+- (IBAction)uploadFileButton:(id)sender {
+    if (![[NSFileManager defaultManager] fileExistsAtPath:_filePath]) {
+        NSLog(@"file not found");
+        return;
+    }
+    // 获取上传token
+    [PLVApi getUploadInfoWithWritetoken:_writetoken userid:_userid cataid:_cataid titlt:_fileTitle tag:_tag luping:_luping filepath:_filePath completionBlock:^(NSString *uploadToken, NSString *vid, NSDictionary *fileInfo) {
+        NSLog(@"vid:%@",vid);
+        ++ _taskTag;
+        
+        // 上传文件
+        [PLVApi startUploadWithFile:_filePath uploadToken:uploadToken taskTag:_taskTag progressBlocak:^(long long totalBytesWritten, long long totalBytesExpectedToWrite) {
+            self.statusLabel.text = @"uploading...";                                              // 上传中操作，多次调用
+            float percent = (float)totalBytesWritten/(float)totalBytesExpectedToWrite;
+            self.progressView.progress = percent;
+            self.progressLabel.text = [NSString stringWithFormat:@"progress:%.1f%%",percent > 1 ? 100.0 : percent*100]; // 结果可能超过百分百
+            
+        } successBlock:^(NSDictionary *responseDict) {
+            NSLog(@"slice upload success : %@", responseDict);                                  // 上传文件成功回调
+            self.statusLabel.text = @"slice upload success";
+            
+            [self clearlocalVideoUploadCaches];         // 清空视频缓存
+        } failureBlock:^(NSDictionary *errorMsg) {
+            NSLog(@"failured : %@", errorMsg);                                                  // 上传文件失败或终止回调
+            
+            NSObject *messages = [errorMsg[@"messages"] firstObject];
+            NSString *status = [NSString new];
+            
+            if ([messages isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *dict = (NSDictionary *)messages;
+                status = dict[@"message"];
+            }else {
+                status = (NSString *)messages;
+            }
+            self.statusLabel.text = status;
+        }];
+    } failureBlock:^(NSDictionary *errorMsg) {
+        NSLog(@"get file info failure:%@",errorMsg);   // 初始化失败
+    }];
+}
+
+// cancel按钮点击事件
+- (IBAction)canceluploadFile:(id)sender {
+    [PLVApi cancelUploadingOperationInTag:_taskTag];    // 取消上传
+}
+
+#pragma mark -
 
 - (void)showSheetAlert {
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
@@ -128,20 +174,20 @@
     // 获取视频的url,当选中某个文件时该文件会被读取到沙盒的temp路径下
     NSURL *videoURL = [info objectForKey:UIImagePickerControllerMediaURL];      // video path
     
+    NSString *originalFileSize = [NSString new];
+    
     if (_isVideoPicker) {       // 拍摄视频上传
-        
         NSString *videoPath = [videoURL path];
         if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(videoPath)) {
             UISaveVideoAtPathToSavedPhotosAlbum(videoPath, self, @selector(video:didFinishSavingWithError:contextInfo:), nil);    // save video to album
-            _originalFileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:videoPath error:nil ] objectForKey:NSFileSize];
+            originalFileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:videoPath error:nil ] objectForKey:NSFileSize];
         }
-    }else {                    // 选取视频文件
-        
-        NSString *originalFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:videoURL.lastPathComponent];        // 文件会被读取到沙盒的temp文件夹中
-        _originalFileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:originalFilePath error:nil ] objectForKey:NSFileSize];
+    }else {      // 选取视频文件
+        NSString *originalFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:videoURL.lastPathComponent];  // 文件会被读取到沙盒的temp文件夹中
+        originalFileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:originalFilePath error:nil ] objectForKey:NSFileSize];
     }
+    NSLog(@"original file size:%@",originalFileSize);      // 原始文件大小
     
-    NSLog(@"original file size:%@",_originalFileSize);      // 原始文件大小
     self.statusLabel.text =     @"压缩中...";
     self.progressLabel.text =   @"progress:0%";
     self.uploadButton.enabled = NO;
@@ -154,17 +200,14 @@
     
     // 视频压缩
     [self convertVideoToLowQuailtyWithInputURL:videoURL outputURL:[NSURL fileURLWithPath:_filePath] handler:^(AVAssetExportSession *exportSession) {
-       
+        
         if (exportSession.status == AVAssetExportSessionStatusCompleted) {
             dispatch_async(dispatch_get_main_queue(), ^{         // 子线程，UI更新等操作需在主线程代码中执行
                 self.statusLabel.text = @"压缩完成";
             });
-            _newFileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:_filePath error:nil] objectForKey:NSFileSize];
-            NSLog(@"compressed file size:%@",_newFileSize);     //  压缩后的文件大小
         }else {
             printf("error\n");
         }
-        
         dispatch_async(dispatch_get_main_queue(), ^{
             self.uploadButton.enabled = YES;
         });
@@ -172,7 +215,7 @@
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
-    //deselected file
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 /** 压缩视频大小*/
@@ -200,58 +243,6 @@
     }
 }
 
-#pragma mark - 点击事件
-
-// upload点击事件
-- (IBAction)uploadFileButton:(id)sender {
-    if (![[NSFileManager defaultManager] fileExistsAtPath:_filePath]) {
-        NSLog(@"file not found");
-        return;
-    }
-    // 初始化上传
-    [[PLVApi alloc] initUploadWithWriteToken:self.writetoken userid:self.userid cataid:self.cataid titlt:self.fileTitle tag:self.tag luping:self.luping filepath:_filePath fileSize:_newFileSize completionBlock:^(NSDictionary *responseDict, NSString *vid) {
-        NSLog(@"vid:%@",vid);
-        
-        NSString *uploadToken = responseDict[@"uploadToken"];   // 获取uploadToken等信息，可打印responseDict查看(writeToken有效期为两个小时)
-        //NSString *bucketName = responseDict[@"bucketName"];
-        //NSString *fileKey = responseDict[@"fileKey"];
-
-        ++ _taskTag;
-        // 初始化成功 调用PLVApi接口开始上传
-        [PLVApi startUploadWithUploadToken:uploadToken taskTag:_taskTag progressBlocak:^(long long totalBytesWritten, long long totalBytesExpectedToWrite) {
-            self.statusLabel.text = @"uploading...";                                              // 上传中操作，多次调用
-            float percent = (float)totalBytesWritten/(float)totalBytesExpectedToWrite;
-            self.progressView.progress = percent;
-            self.progressLabel.text = [NSString stringWithFormat:@"progress:%.1f%%",percent > 1 ? 100.0 : percent*100]; // 解决可能出现超过百分百的问题
-            
-        } successBlock:^(NSDictionary *responseDict) {
-            NSLog(@"slice upload success : %@", responseDict);                                  // 上传文件成功回调
-            // 目前sdk中处理缓存部分是在文件上传成功后清空沙盒中Temp缓存的所有文件，包括视频源文件，压缩后的文件，上传成功和之前上传失败的文件
-            self.statusLabel.text = @"slice upload success";
-            
-        } failureBlock:^(NSDictionary *errorMsg) {
-            NSLog(@"failured : %@", errorMsg);                                                  // 上传文件失败或终止回调
-            
-            NSObject *messages = [errorMsg[@"messages"] firstObject];
-            NSString *status = [NSString new];
-            
-            if ([messages isKindOfClass:[NSDictionary class]]) {
-                NSDictionary *dict = (NSDictionary *)messages;
-                status = dict[@"message"];
-            }else {
-                status = (NSString *)messages;
-            }
-            self.statusLabel.text = status;
-        }];
-    } failureBlock:^(NSDictionary *errorMsg) {
-        NSLog(@"init upload failed:%@",errorMsg);   // 初始化失败
-    }];
-}
-
-// cancel按钮点击事件
-- (IBAction)canceluploadFile:(id)sender {
-    [PLVApi cancelUploadingOperationInTag:_taskTag];    // 取消上传
-}
 
 #pragma mark - 重写方法
 
@@ -266,6 +257,17 @@
         _videoPicker.editing = YES;     // 允许编辑
     }
     return _videoPicker;
+}
+
+
+// empty video cache
+- (void)clearlocalVideoUploadCaches {
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSArray *fileArr = [fileManager subpathsOfDirectoryAtPath:NSTemporaryDirectory() error:nil];
+    for (NSString *fileName in fileArr) {
+        [fileManager removeItemAtPath:[NSTemporaryDirectory() stringByAppendingPathComponent:fileName] error:nil];
+    }
 }
 
 
