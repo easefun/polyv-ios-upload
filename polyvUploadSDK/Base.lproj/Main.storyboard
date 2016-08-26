@@ -83,7 +83,9 @@
                                 <rect key="frame" x="73" y="406" width="47" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="Zzw-pH-Fcb"/>
-                                    <constraint firstAttribute="width" constant="47" id="vU7-fN-vhM"/>
+                                    <constraint firstAttribute="width" constant="47" id="vU7-fN-vhM">
+                                        <variation key="widthClass=compact" constant="58"/>
+                                    </constraint>
                                 </constraints>
                                 <state key="normal" title="upload"/>
                                 <variation key="default">
@@ -147,7 +149,9 @@
                             <constraint firstItem="Y5D-N1-Eg3" firstAttribute="leading" secondItem="fes-KU-pXy" secondAttribute="trailing" constant="75" id="9Ox-vN-p2d"/>
                             <constraint firstItem="fes-KU-pXy" firstAttribute="top" secondItem="rlw-Iw-iZt" secondAttribute="bottom" constant="70" id="Cau-o1-BVR"/>
                             <constraint firstItem="rlw-Iw-iZt" firstAttribute="leading" secondItem="uKh-EA-E6d" secondAttribute="leading" id="FaD-ME-jy6"/>
-                            <constraint firstItem="fes-KU-pXy" firstAttribute="leading" secondItem="c5M-Ca-99b" secondAttribute="leadingMargin" constant="80" id="Jmj-lM-cgl"/>
+                            <constraint firstItem="fes-KU-pXy" firstAttribute="leading" secondItem="c5M-Ca-99b" secondAttribute="leadingMargin" constant="80" id="Jmj-lM-cgl">
+                                <variation key="widthClass=compact" constant="69"/>
+                            </constraint>
                             <constraint firstItem="avW-Dk-kex" firstAttribute="top" secondItem="KT8-FN-Raj" secondAttribute="bottom" constant="60" id="PFP-6E-2Qe"/>
                             <constraint firstItem="rlw-Iw-iZt" firstAttribute="leading" secondItem="c5M-Ca-99b" secondAttribute="leadingMargin" constant="26" id="VUL-1y-iml"/>
                             <constraint firstItem="Siw-E1-xph" firstAttribute="top" secondItem="avW-Dk-kex" secondAttribute="bottom" constant="20" id="XOd-Ux-qXE"/>
