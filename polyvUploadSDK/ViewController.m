@@ -127,19 +127,27 @@
 #pragma mark -
 
 - (void)showSheetAlert {
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-    UIAlertAction *selectFileAction = [UIAlertAction actionWithTitle:@"文件上传" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        [self selectVideoFile];     // 文件上传
-    }];
-    UIAlertAction *takeVideoAction = [UIAlertAction actionWithTitle:@"拍摄上传" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        [self takeVideo];           // 拍摄上传
-    }];
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
-    [alertController addAction:selectFileAction];
-    [alertController addAction:takeVideoAction];
-    [alertController addAction:cancelAction];
     
-    [self presentViewController:alertController animated:YES completion:nil];
+    // 系统版本判断
+    if ([UIDevice currentDevice].systemVersion.floatValue >= 8.0f ) {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+        UIAlertAction *selectFileAction = [UIAlertAction actionWithTitle:@"文件上传" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [self selectVideoFile];     // 文件上传
+        }];
+        UIAlertAction *takeVideoAction = [UIAlertAction actionWithTitle:@"拍摄上传" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [self takeVideo];           // 拍摄上传
+        }];
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
+        [alertController addAction:selectFileAction];
+        [alertController addAction:takeVideoAction];
+        [alertController addAction:cancelAction];
+        
+        [self presentViewController:alertController animated:YES completion:nil];
+    }else {
+        // 使用UIAlerView(2_0, 9_0)
+        NSLog(@"系统版本小于8.0,使用UIAlerView");
+        
+    }
 }
 
 - (void)selectVideoFile {
