@@ -178,8 +178,8 @@
     
     // 获取视频的url,当选中某个文件时该文件会被读取到沙盒的temp路径下
     NSURL *videoURL = [info objectForKey:UIImagePickerControllerMediaURL];      // video path
-    
-    NSString *originalFileSize = [NSString new];
+    // 获取视频缩略图
+    [self thumbnailImageRequestWithURL:videoURL];    NSString *originalFileSize = [NSString new];
     
     if (_isVideoPicker) {       // 拍摄视频上传
         NSString *videoPath = [videoURL path];
@@ -196,10 +196,6 @@
     self.statusLabel.text =     @"压缩中...";
     self.progressLabel.text =   @"progress:0%";
     self.uploadButton.enabled = NO;
-    
-    // 获取视频缩略图
-    MPMoviePlayerController *player = [[MPMoviePlayerController alloc] initWithContentURL:videoURL];
-    self.imageView.image = [player thumbnailImageAtTime:0.0 timeOption:MPMovieTimeOptionNearestKeyFrame];
     
     _filePath =[NSTemporaryDirectory() stringByAppendingPathComponent:@"temp.mov"];
     
@@ -221,6 +217,34 @@
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+//获取视频缩略图
+-(void)thumbnailImageRequestWithURL:(NSURL *)url
+{
+    
+    //根据url创建AVURLAsset
+    AVURLAsset *urlAsset=[AVURLAsset assetWithURL:url];
+    //根据AVURLAsset创建AVAssetImageGenerator
+    AVAssetImageGenerator *imageGenerator=[AVAssetImageGenerator assetImageGeneratorWithAsset:urlAsset];
+    /*截图
+     * requestTime:缩略图创建时间
+     * actualTime:缩略图实际生成的时间
+     */
+    NSError *error=nil;
+    CMTime time=CMTimeMakeWithSeconds(0, 10);//CMTime是表示视频时间信息的结构体，第一个参数表示是视频第几秒，第二个参数表示每秒帧数.(如果要获取的某一秒的第几帧可以使用CMTimeMake方法)
+    CMTime actualTime;
+    CGImageRef cgImage= [imageGenerator copyCGImageAtTime:time actualTime:&actualTime error:&error];
+    if(error){
+        NSLog(@"截取视频缩略图时发生错误，错误信息：%@",error.localizedDescription);
+        return;
+    }
+    CMTimeShow(actualTime);
+    self.imageView.image= [UIImage imageWithCGImage:cgImage];//转化为UIImage
+    UIImage *image=[UIImage imageWithCGImage:cgImage];//转化为UIImage
+    //保存到相册
+    UIImageWriteToSavedPhotosAlbum(image,nil, nil, nil);
+    //   CGImageRelease(cgImage);
 }
 
 /** 压缩视频大小*/
