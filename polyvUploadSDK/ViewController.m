@@ -50,7 +50,8 @@
     [self initializeData];     // 初始化数据
 }
 
-- (void)setupUI {
+- (void)setupUI
+{
     UIBarButtonItem *rightBarButtonitem = [[UIBarButtonItem alloc] initWithTitle:@"选取" style:UIBarButtonItemStyleDone target:self action:@selector(showSheetAlert)];
     UINavigationItem *navigationItem = [[UINavigationItem alloc] initWithTitle:@"断点续传"];
     [navigationItem setRightBarButtonItem:rightBarButtonitem];
@@ -59,7 +60,8 @@
     navigationBar.items = @[navigationItem];
 }
 
-- (void)initializeData {
+- (void)initializeData
+{
     // 示例数据
     self.writetoken = WRITETOKEN;
     self.userid = USERID;
@@ -78,7 +80,8 @@
 
 #pragma mark - 点击事件
 
-- (IBAction)uploadFileButton:(id)sender {
+- (IBAction)uploadFileButton:(id)sender
+{
     if (![[NSFileManager defaultManager] fileExistsAtPath:_filePath]) {
         NSLog(@"file not found");
         return;
@@ -120,13 +123,15 @@
 }
 
 // cancel按钮点击事件
-- (IBAction)canceluploadFile:(id)sender {
+- (IBAction)canceluploadFile:(id)sender
+{
     [PLVApi cancelUploadingOperationInTag:_taskTag];    // 取消上传
 }
 
-#pragma mark -
+#pragma mark --UIAlertController
 
-- (void)showSheetAlert {
+- (void)showSheetAlert
+{
     
     // 系统版本判断
     if ([UIDevice currentDevice].systemVersion.floatValue >= 8.0f ) {
@@ -150,7 +155,8 @@
     }
 }
 
-- (void)selectVideoFile {
+- (void)selectVideoFile
+{
     UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
     [imagePicker setSourceType:UIImagePickerControllerSourceTypeSavedPhotosAlbum];
     [imagePicker setMediaTypes:@[(__bridge NSString *)kUTTypeMovie]];   // 设置媒体类型为movie
@@ -159,7 +165,8 @@
     [self presentViewController:imagePicker animated:YES completion:nil];
 }
 
-- (void)takeVideo {
+- (void)takeVideo
+{
     _isVideoPicker = YES;
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
         [self presentViewController:self.videoPicker animated:YES completion:nil];
@@ -168,18 +175,20 @@
     }
 }
 
-
 #pragma mark - UIImagePickerControllerDelegate
 
 // 此代理方法在拍摄完成和选取视频文件完成都会被调用，所以里面须有相应的逻辑判断作为区分，此处使用_isVideoPicker标记
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
+{
     
     [self dismissViewControllerAnimated:YES completion:nil];
     
     // 获取视频的url,当选中某个文件时该文件会被读取到沙盒的temp路径下
     NSURL *videoURL = [info objectForKey:UIImagePickerControllerMediaURL];      // video path
     // 获取视频缩略图
-    [self thumbnailImageRequestWithURL:videoURL];    NSString *originalFileSize = [NSString new];
+    [self thumbnailImageRequestWithURL:videoURL];
+    
+    NSString *originalFileSize = [NSString new];
     
     if (_isVideoPicker) {       // 拍摄视频上传
         NSString *videoPath = [videoURL path];
@@ -215,14 +224,16 @@
     }];
 }
 
-- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
     [self dismissViewControllerAnimated:YES completion:nil];
 }
+
+#pragma mark --视频处理
 
 //获取视频缩略图
 -(void)thumbnailImageRequestWithURL:(NSURL *)url
 {
-    
     //根据url创建AVURLAsset
     AVURLAsset *urlAsset=[AVURLAsset assetWithURL:url];
     //根据AVURLAsset创建AVAssetImageGenerator
@@ -241,10 +252,7 @@
     }
     CMTimeShow(actualTime);
     self.imageView.image= [UIImage imageWithCGImage:cgImage];//转化为UIImage
-    UIImage *image=[UIImage imageWithCGImage:cgImage];//转化为UIImage
-    //保存到相册
-    UIImageWriteToSavedPhotosAlbum(image,nil, nil, nil);
-    //   CGImageRelease(cgImage);
+   
 }
 
 /** 压缩视频大小*/
@@ -263,8 +271,9 @@
      }];
 }
 
-// 保存到相册成功的回调方法，如不回调，设置UISaveVideoAtPathToSavedPhotosAlbum方法第二个和第三个参数为nil即可
-- (void)video:(NSString *)videoPath didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {
+//视频 保存到相册成功的回调方法，如不回调，设置UISaveVideoAtPathToSavedPhotosAlbum方法第二个和第三个参数为nil即可
+- (void)video:(NSString *)videoPath didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo
+{
     if (error) {
         NSLog(@"save failure:%@",error.localizedDescription);
     }else {
@@ -272,10 +281,20 @@
     }
 }
 
+// empty video cache
+- (void)clearlocalVideoUploadCaches
+{
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSArray *fileArr = [fileManager subpathsOfDirectoryAtPath:NSTemporaryDirectory() error:nil];
+    for (NSString *fileName in fileArr) {
+        [fileManager removeItemAtPath:[NSTemporaryDirectory() stringByAppendingPathComponent:fileName] error:nil];
+    }
+}
 
-#pragma mark - 重写方法
+#pragma mark - 懒加载
 
-- (UIImagePickerController *)videoPicker {
+- (UIImagePickerController *)videoPicker
+{
     if (!_videoPicker) {
         _videoPicker = [[UIImagePickerController alloc] init];
         [_videoPicker setSourceType:UIImagePickerControllerSourceTypeCamera];
@@ -288,19 +307,9 @@
     return _videoPicker;
 }
 
-// empty video cache
-- (void)clearlocalVideoUploadCaches {
-    
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSArray *fileArr = [fileManager subpathsOfDirectoryAtPath:NSTemporaryDirectory() error:nil];
-    for (NSString *fileName in fileArr) {
-        [fileManager removeItemAtPath:[NSTemporaryDirectory() stringByAppendingPathComponent:fileName] error:nil];
-    }
-}
-
-- (void)didReceiveMemoryWarning {
+- (void)didReceiveMemoryWarning
+{
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 @end
