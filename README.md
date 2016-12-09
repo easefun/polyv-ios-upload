@@ -50,9 +50,7 @@
     
 4. 配置info.plist文件
 
-  iOS9.0中开发要求App内访问的网络必须使用HTTPS协议，为了解决这个问题。我们可以在Info.plist文件中添加NSAppTransportSecurity条目，此条目下再添加NSAllowsArbitraryLoads，并设值为YES
-![](https://raw.githubusercontent.com/easefun/polyv-ios-upload/master/images/2.png)
- 非测试文件中的Info.plist
+  **现POLYV上传SDK已全面支持ATS(App Transport Security)，所有的网络访问均使用HTTPS，无需在info.plist中配置ATS。**
 
 5. 导入PLVApi.h头文件
 
@@ -160,5 +158,21 @@
     }];
 }
 ```
+
+## DEMO 项目说明
+
+本工程使用POLYV 上传SDK进行文件的上传演示。项目代码可供参考，使用中需要注意接口文件的说明。
+
+- 清空视频缓存，视频上传成功后可以清空视频文件缓存，在demo中已默认取消，如有需要可参考`[self clearlocalVideoUploadCaches]`方法（解注释）。
+- 视频压缩，demo中默认会压缩视频（建议压缩）。
+
+## FAQ
+
+1. 客户端打印错误信息
+
+```
+failured : {    messages =     (                {            code = 401;            message = "File Name Invalid";        }    );}
+```
+文件名无效，同一视频文件上传成功后不能重复上传
 
 
