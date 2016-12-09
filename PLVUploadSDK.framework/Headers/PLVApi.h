@@ -26,15 +26,15 @@
             fileInfo:       待上传文件其他信息
  *  @param failureBlock    获取失败回调的block
  */
-+ (void)getUploadInfoWithWritetoken:(NSString *)writeToken
-                             userid:(NSString *)userid
-                             cataid:(NSString *)cataid
-                              titlt:(NSString *)title
-                                tag:(NSString *)tag
-                             luping:(NSString *)luping
-                           filepath:(NSString *)filepath
-                    completionBlock:(void(^)(NSString *uploadToken, NSString *vid, NSDictionary *fileInfo))completionBlock
-                       failureBlock:(void(^)(NSDictionary *errorMsg))failureBlock;
++ (void)getUploadInfoWithWritetoken:( NSString * _Nonnull )writeToken
+                             userId:( NSString * _Nonnull )userId
+                             cataId:( NSString * _Nonnull )cataId
+                              titlt:( NSString * _Nonnull )title
+                                tag:( NSString * _Nonnull )tag
+                             luping:( NSString * _Nonnull )luping
+                           filePath:( NSString * _Nonnull )filePath
+                    completionBlock:( void(^ _Nullable )(NSString * _Nonnull uploadToken, NSString * _Nonnull vid, NSDictionary * _Nonnull fileInfo))completionBlock
+                       failureBlock:( void(^ _Nullable )(NSDictionary * _Nullable errorMsg))failureBlock;
 
 /**
  *  上传文件(代码块回调部分在主线程中)
@@ -46,12 +46,12 @@
  *  @param successBlock  上传成功回调的block
  *  @param failureblock  上传失败回调的block
  */
-+ (void)startUploadWithFile:(NSString *)filePath
-                uploadToken:(NSString *)uploadToken
-                    taskTag:(NSUInteger)taskTag
-             progressBlocak:(void(^)(long long totalBytesWritten, long long totalBytesExpectedToWrite))progressBlock
-               successBlock:(void(^)(NSDictionary *responseDict))successBlock
-               failureBlock:(void(^)(NSDictionary *errorMeg))failureblock;
++ (void)startUploadWithFile:( NSString * _Nonnull )filePath
+                uploadToken:( NSString * _Nonnull )uploadToken
+                    taskTag:( NSUInteger )taskTag
+             progressBlocak:(void(^ _Nullable )(long long totalBytesWritten, long long totalBytesExpectedToWrite))progressBlock
+               successBlock:(void(^ _Nullable )(NSDictionary * _Nullable responseDict))successBlock
+               failureBlock:(void(^ _Nullable )(NSDictionary * _Nullable errorMeg))failureBlock;
 
 /** 取消taskTag标记的上传任务*/
 + (void)cancelUploadingOperationInTag:(NSUInteger)taskTag;

@@ -87,7 +87,7 @@
         return;
     }
     // 获取上传token
-    [PLVApi getUploadInfoWithWritetoken:_writetoken userid:_userid cataid:_cataid titlt:_fileTitle tag:_tag luping:_luping filepath:_filePath completionBlock:^(NSString *uploadToken, NSString *vid, NSDictionary *fileInfo) {
+    [PLVApi getUploadInfoWithWritetoken:_writetoken userId:_userid cataId:_cataid titlt:_fileTitle tag:_tag luping:_luping filePath:_filePath completionBlock:^(NSString *uploadToken, NSString *vid, NSDictionary *fileInfo) {
         NSLog(@"vid:%@",vid);
         ++ _taskTag;
         
@@ -102,7 +102,7 @@
             NSLog(@"slice upload success : %@", responseDict);                                  // 上传文件成功回调
             self.statusLabel.text = @"slice upload success";
             
-            [self clearlocalVideoUploadCaches];         // 清空视频缓存
+            //[self clearlocalVideoUploadCaches];         // 清空视频缓存
         } failureBlock:^(NSDictionary *errorMsg) {
             NSLog(@"failured : %@", errorMsg);                                                  // 上传文件失败或终止回调
             
@@ -132,7 +132,6 @@
 
 - (void)showSheetAlert
 {
-    
     // 系统版本判断
     if ([UIDevice currentDevice].systemVersion.floatValue >= 8.0f ) {
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
