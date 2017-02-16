@@ -5,7 +5,6 @@
 
 主要特性：
 
-- 视频文件的后台上传
 - 通过分片上传技术实现文件的断点续传
 - 使用CDN服务器实现文件的加速上传
 
@@ -171,7 +170,14 @@
 1. 客户端打印错误信息
 
 ```
-failured : {    messages =     (                {            code = 401;            message = "File Name Invalid";        }    );}
+failured : {
+    messages =     (
+                {
+            code = 401;
+            message = "File Name Invalid";
+        }
+    );
+}
 ```
 文件名无效，同一视频文件上传成功后不能重复上传
 
