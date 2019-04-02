@@ -1,7 +1,7 @@
 # polyv-ios-upload
->本项目演示使用PLVUploadSDK.framework静态库上传视频文件，polyvUploadSDK实现了文件的续传和加速上传等特性。
 
->polyvUploadSDK会将待上传的视频文件切成大小相同块(块在这里为服务端的数据存储单位)，再把每一块切成大小相等的片。上传过程就是把一片片的数据片上传至服务器，如果当前块未传输完毕(手动取消或者断网等情况造成传输终止)，再次上传时需要重新传输该文件块。如果视频总文件较小，则会较明显看到进度从之前某个位置开始。
+> 本项目演示使用 PLVUploadSDK.framework 静态库上传视频文件，PLVUploadSDK 实现了文件的续传和加速上传等特性。
+> PLVUploadSDK 将待上传的视频文件切成大小相同块(块在这里为服务端的数据存储单位)，再把每一块切成大小相等的片。上传过程就是把一片片的数据片上传至服务器，如果当前块未传输完毕(手动取消或者断网等情况造成传输终止)，再次上传时需要重新传输该文件块。如果视频总文件较小，则会较明显看到进度从之前某个位置开始。
 
 主要特性：
 
@@ -33,38 +33,40 @@
 - 支持iOS7.0以上系统版本编译及armv7、 arm64(真机)、i386、x86_64(模拟器)架构cpu
   
 ## 使用前准备
+
 1. 导入PLVUploadSDK
 
- 将PLVUploadSDK.framework拖入到工程中，选中”Copy items if needed”，如下图。或先将该framework拷贝至工程目录下，选中项目的TARGETS->Build Phases下的Link binary With Libraries中添加PLVUploadSDK.framework
+    将PLVUploadSDK.framework拖入到工程中，选中”Copy items if needed”，如下图。或先将该framework拷贝至工程目录下，选中项目的TARGETS->Build Phases下的Link binary With Libraries中添加PLVUploadSDK.framework
 ![](https://raw.githubusercontent.com/easefun/polyv-ios-upload/master/images/1.png)
 
 2. 导入libz.tbd库文件
 
-   Xcode project->TARGETS->Build Phases下的Link binary With Libraries中查找并导入libz.tbd库文件
+    Xcode project->TARGETS->Build Phases下的Link binary With Libraries中查找并导入libz.tbd库文件
      
 3. 设置Other Linker Flags的标志 -ObjC
 
-  PLVUploadSDK.framework中使用了category，在使用该库文件时需要将静态库中所有的和对象相关的文件都加载进来。具体操作如下：在Xcode project->TARGETS->Build Settings的Other Linker Flags下添加 -ObjC 标志。
+    PLVUploadSDK.framework中使用了category，在使用该库文件时需要将静态库中所有的和对象相关的文件都加载进来。具体操作如下：在Xcode project->TARGETS->Build Settings的Other Linker Flags下添加 -ObjC 标志。
   如果继续报错"selector not recognized"可尝试添加"-all_load"标志(加载静态库中所有文件)。
     
 4. 配置info.plist文件
 
-  **现POLYV上传SDK已全面支持ATS(App Transport Security)，所有的网络访问均使用HTTPS，无需在info.plist中配置ATS。**
+    **现POLYV上传SDK已全面支持ATS(App Transport Security)，所有的网络访问均使用HTTPS，无需在info.plist中配置ATS。**
 
 5. 导入PLVApi.h头文件
 
-```objective-c
-#import<PLVUploadSDK/PLVApi.h>
-```
-  **使用此头文件时如果Xcode提示"file not found"错误,可尝试直接拷贝此行代码,Xcode7.3编译器有时没有感应**
+    使用此头文件时如果Xcode提示"file not found"错误，可尝试直接拷贝此行代码，低版本编译器可能无自动补全提示
+    
+  ```objective-c
+  #import<PLVUploadSDK/PLVApi.h>
+  ```
 
 ## 上传接口及使用
 
-1. PLVApi.h接口文件
+1. PLVApi.h 接口文件
 
  - 获取上传token等信息
 
-	```objective-c
+```objective-c
 /**
  *  获取上传token等信息
  *
@@ -90,12 +92,13 @@
                            filepath:(NSString *)filepath
                     completionBlock:(void(^)(NSString *uploadToken, NSString *vid, NSDictionary *fileInfo))completionBlock
                        failureBlock:(void(^)(NSDictionary *errorMsg))failureBlock;
-```   
+```
+
 **获取到的上传uploadToken值有效期为两个小时**
 
  - 上传文件
 
-	```objective-c
+```objective-c
 /**
  *  上传文件(代码块回调部分在主线程中)
  *
@@ -112,16 +115,17 @@
              progressBlocak:(void(^)(long long totalBytesWritten, long long totalBytesExpectedToWrite))progressBlock
                successBlock:(void(^)(NSDictionary *responseDict))successBlock
                failureBlock:(void(^)(NSDictionary *errorMeg))failureblock;
-```     
+```
+
  - 取消taskTag标记的上传任务
 
-	```objective-c
+```objective-c
 + (void)cancelUploadingOperationInTag:(NSUInteger)taskTag;
 ```
 
 2. 上传
 
-	```objective-c
+```objective-c
 	// 获取上传token
     [PLVApi getUploadInfoWithWritetoken:_writetoken userid:_userid cataid:_cataid titlt:_fileTitle tag:_tag luping:_luping filepath:_filePath completionBlock:^(NSString *uploadToken, NSString *vid, NSDictionary *fileInfo) {
         ++ _taskTag;		// 设置一个记录当前上传任务的taskTag变量
@@ -160,14 +164,14 @@
 
 ## DEMO 项目说明
 
-本工程使用POLYV 上传SDK进行文件的上传演示。项目代码可供参考，使用中需要注意接口文件的说明。
+本项目使用 POLYV上传SDK 进行文件上传演示，具体使用可参考deom。
 
-- 清空视频缓存，视频上传成功后可以清空视频文件缓存，在demo中已默认取消，如有需要可参考`[self clearlocalVideoUploadCaches]`方法（解注释）。
-- 视频压缩，demo中默认会压缩视频（建议压缩）。
+- 清空视频缓存 视频上传成功后可以清空视频文件缓存，在demo默认未清空，清空方法 `-clearlocalVideoUploadCaches`。
+- 视频压缩 demo中默认会压缩视频（建议压缩）。
 
 ## FAQ
 
-1. 客户端打印错误信息
+1. 控制台错误信息
 
 ```
 failured : {
@@ -180,5 +184,3 @@ failured : {
 }
 ```
 文件名无效，同一视频文件上传成功后不能重复上传
-
-
