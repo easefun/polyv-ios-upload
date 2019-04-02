@@ -50,7 +50,7 @@
     
 4. 配置info.plist文件
 
-    **现POLYV上传SDK已全面支持ATS(App Transport Security)，所有的网络访问均使用HTTPS，无需在info.plist中配置ATS。**
+    POLYV上传SDK已全面支持ATS(App Transport Security)，所有的网络访问均使用HTTPS，无需在info.plist中配置ATS。
 
 5. 导入PLVApi.h头文件
 
@@ -126,8 +126,8 @@
 2. 上传
 
 ```objective-c
-	// 获取上传token
-    [PLVApi getUploadInfoWithWritetoken:_writetoken userid:_userid cataid:_cataid titlt:_fileTitle tag:_tag luping:_luping filepath:_filePath completionBlock:^(NSString *uploadToken, NSString *vid, NSDictionary *fileInfo) {
+// 获取上传token
+[PLVApi getUploadInfoWithWritetoken:_writetoken userid:_userid cataid:_cataid titlt:_fileTitle tag:_tag luping:_luping filepath:_filePath completionBlock:^(NSString *uploadToken, NSString *vid, NSDictionary *fileInfo) {
         ++ _taskTag;		// 设置一个记录当前上传任务的taskTag变量
         
         // 上传文件
